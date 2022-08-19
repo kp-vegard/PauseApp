@@ -1,0 +1,60 @@
+<form>
+    <a href=valg><input type='button' value='Tilbake' id='back'></a>
+</form>
+<div>
+<h2>Registrer ut</h2>
+<form action=done_out method='POST'>
+<select name='name' onchange="EnableDisableBtn(this)">
+    <option id='dropDown' value='placeholder' disabled SELECTED hidden>Velg et navn</option>
+    {% for i in data %}
+    <option value= "{{i[0]}} {{i[1]}}">{{i[0]}} ({{i[1]}})</option>
+    {% endfor %}
+</select><br>
+<input id='btn' type='submit' value='Registrer ut' class='button' disabled="disabled">
+</form>
+</div>
+<script>
+    setTimeout(function(){
+        window.location.href = 'valg';
+    }, 60000);
+
+    function EnableDisableBtn(dropDown) {
+        var btn = document.getElementById('btn');
+        if (dropDown.value.trim() == 'placeholder') {
+            btn.disabled = true;
+        } else {
+            btn.disabled = false;
+        }
+    };
+</script>
+<style>
+    div{
+        text-align: center;
+    }
+
+    h2 {
+        font-family: 'Lato';
+        font-size: 75px;
+    }
+
+    select{
+        width: 200px;
+        height: 75px;
+    }
+
+    .button {
+        width: 200px;
+        height: 75px;
+        border-radius: 10px;
+        font-size: x-large;
+        background-color: rgb(0, 255, 0);
+    }
+
+    #back {
+        width: 100px;
+        height: 50px;
+        border-radius: 10px;
+        font-size: medium;
+        background-color: red;
+    }
+</style>
