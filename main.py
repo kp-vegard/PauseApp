@@ -30,7 +30,7 @@ def out():
 def login():
     return render_template('login.html')
 
-@app.route('/adminzu25spre')
+@app.route('/admin')
 def admin():
     data = load_database()
     data2 = load_breaks()
@@ -60,7 +60,8 @@ def check_in_data():
             with open(f'data/{month}/log/{todays_date}.txt', 'a') as file:
                 file.write(f'{name} ({place}) sjekket seg inn {start_time}\n')
         except FileNotFoundError:
-            new_month()
+            try: new_month()
+            except: new_day()
         else: break
 
     return render_template('done.html')
@@ -90,7 +91,8 @@ def check_out_data():
                                 writer2.writerow([name, place, tid_inn, end_time, total_time])
                             
                         except FileNotFoundError:
-                            new_month()
+                            try: new_month()
+                            except: new_day()
                         else: break
                 else:
                     writer.writerow(row)
@@ -110,7 +112,8 @@ def check_out_data():
             with open(f'data/{month}/log/{todays_date}.txt', 'a') as file:
                 file.write(f'{name} ({place}) sjekket seg ut {end_time}\n')
         except FileNotFoundError:
-            new_month()
+            try: new_month()
+            except: new_day()
         else: break
 
 
@@ -135,7 +138,8 @@ def load_breaks():
             df = pd.read_csv(f'data/{month}/total/{date.today()}.csv')
             return df
         except FileNotFoundError:
-            new_day()
+            try: new_month()
+            except: new_day()
     
 
 def new_month():
