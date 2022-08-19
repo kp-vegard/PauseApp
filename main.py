@@ -1,4 +1,3 @@
-from tkinter import Place
 from urllib import request
 from flask import Flask, render_template, request, redirect
 import time
@@ -6,6 +5,9 @@ from datetime import date, datetime
 import pandas as pd
 import os
 import csv
+import sys
+
+root = sys.path[0]
 
 app = Flask(__name__)
 
@@ -51,13 +53,13 @@ def check_in_data():
     todays_date = date.today()
     month = datetime.now().month
 
-    with open(f'active/onbreak.csv', 'a') as csv_file:
+    with open(f'{root}/active/onbreak.csv', 'a') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow([name, place, start_time, current_time])
 
     for attempt in range(5):
         try:
-            with open(f'data/{month}/log/{todays_date}.txt', 'a') as file:
+            with open(f'{root}/data/{month}/log/{todays_date}.txt', 'a') as file:
                 file.write(f'{name} ({place}) sjekket seg inn {start_time}\n')
         except FileNotFoundError:
             try: new_month()
@@ -73,8 +75,8 @@ def check_out_data():
     end_time = datetime.now().strftime('%H:%M')
     month = datetime.now().month
     #Copy content from main file to to temp and removing the name stamping out
-    with open('active/onbreak.csv', 'r') as csv_file:
-        with open('active/temp.csv', 'w') as temp_file:
+    with open(f'{root}/active/onbreak.csv', 'r') as csv_file:
+        with open(f'{root}/active/temp.csv', 'w') as temp_file:
             writer = csv.writer(temp_file)
             for row in csv.reader(csv_file):
                 if row[0] == name and row[1] == place:
@@ -83,7 +85,7 @@ def check_out_data():
 
                     for attempt in range(5):
                         try:
-                            with open(f'data/{month}/total/{todays_date}.csv', 'a') as file:
+                            with open(f'{root}/data/{month}/total/{todays_date}.csv', 'a') as file:
                                 time_now = int(time.time())
                                 total_time = time_now - total_time
                                 total_time = int(total_time//60)
@@ -99,8 +101,8 @@ def check_out_data():
 
 
     #Copy content from temp file to main file
-    with open('active/onbreak.csv', 'w') as csv_file:
-        with open('active/temp.csv', 'r') as temp_file:
+    with open(f'{root}/active/onbreak.csv', 'w') as csv_file:
+        with open(f'{root}/active/temp.csv', 'r') as temp_file:
             writer = csv.writer(csv_file)   
             for row in csv.reader(temp_file):
                 writer.writerow(row)
@@ -109,7 +111,7 @@ def check_out_data():
 
     for attempt in range(5):
         try: 
-            with open(f'data/{month}/log/{todays_date}.txt', 'a') as file:
+            with open(f'{root}/data/{month}/log/{todays_date}.txt', 'a') as file:
                 file.write(f'{name} ({place}) sjekket seg ut {end_time}\n')
         except FileNotFoundError:
             try: new_month()
@@ -121,7 +123,7 @@ def check_out_data():
 
 
 def load_database():
-    df = pd.read_csv('active/onbreak.csv')
+    df = pd.read_csv(f'{root}/active/onbreak.csv')
     current_time = time.time()
     new = []
     for i in df['time'].values:
@@ -135,7 +137,7 @@ def load_breaks():
     month = datetime.now().month
     for attemps in range(5):
         try:
-            df = pd.read_csv(f'data/{month}/total/{date.today()}.csv')
+            df = pd.read_csv(f'{root}/data/{month}/total/{date.today()}.csv', encoding='latin-1')
             return df
         except FileNotFoundError:
             try: new_month()
@@ -144,13 +146,13 @@ def load_breaks():
 
 def new_month():
     month = datetime.now().month
-    os.makedirs(f'data/{month}/log')
-    os.makedirs(f'data/{month}/total')
+    os.makedirs(f'{root}/data/{month}/log')
+    os.makedirs(f'{root}/data/{month}/total')
     new_day()
 
 def new_day():
     month = datetime.now().month
-    with open(f'data/{month}/total/{date.today()}.csv', 'w') as file:
+    with open(f'{root}/data/{month}/total/{date.today()}.csv', 'w') as file:
         writer = csv.writer(file)
         writer.writerow(['Navn','Sted','Tid inn', 'Tid ut','Tid på pause'])
 
