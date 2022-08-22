@@ -1,5 +1,5 @@
 <head>
-    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <form>
     <a href=valg><input type='button' value='Tilbake' id='back'></a>
@@ -7,8 +7,8 @@
 <div>
     <h2>Registrer pause</h2>
     <form action=done method='POST'>
-        <input id='input-box' type='text' name='name' placeholder='Navn' required='' size='10'><br>
-        <input id='input-box' type='text' name='place' placeholder='Sted før pause' required='' size='10'><br>
+        <input id='input-box' type='text' name='name' placeholder='Navn' required='' size='10' pattern="[a-åA-Å]*" title="Skriv inn navnet ditt"><br>
+        <input id='input-box' type='text' name='place' placeholder='Sted før pause' required='' size='10' pattern="[a-åA-Å]*" title="Skriv inn stedet du jobbet før pause"><br>
         <input type='submit' value='Registrer' class='button'>
     </form>
 </div>

@@ -1,5 +1,5 @@
 <head>
-    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <form>
     <a href=valg><input type='button' value='Tilbake' id='back'></a>
@@ -7,10 +7,10 @@
 <div>
 <h2>Registrer ut</h2>
 <form action=done_out method='POST'>
-<select name='name' onchange="EnableDisableBtn(this)">
+<select name='id' onchange="EnableDisableBtn(this)">
     <option id='dropDown' value='placeholder' disabled SELECTED hidden>Velg et navn</option>
-    {% for name in names %}
-    <option value= "{{name}}">{{name}}</option>
+    {% for value in data %}
+    <option value= "{{value[2]}}">{{value[0]}} ({{value[1]}})</option>
     {% endfor %}
 </select><br>
 <input id='btn' type='submit' value='Registrer ut' class='button' disabled="disabled">

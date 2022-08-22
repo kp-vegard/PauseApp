@@ -5,6 +5,7 @@ import pandas as pd
 import os
 import csv
 import sys
+from random import randint
 
 root = sys.path[0]
 app = Flask(__name__)
@@ -24,7 +25,7 @@ def inn():
 @app.route('/ut')
 def out():
     data = load_database()
-    return render_template('out.html', names=data['Navn'].values)
+    return render_template('out.html', data=zip(data['Navn'].values, data['Sted'].values, data['id'].values))
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -34,6 +35,7 @@ def admin():
     data = load_database()
     data2 = load_breaks()
     del data['time']
+    del data['id']
     return render_template('admin.html',
                             tables=[data.to_html(classes='data')],
                             titles=data.columns.values,
@@ -45,6 +47,7 @@ def admin():
 def check_in_data():
     name = request.form['name'].title()
     place = request.form['place'].title()
+    unique_id = str(randint(1, 1000)) + name[0] + place
     t = datetime.now()
     e = t + timedelta(minutes=30)
     start_time = t.strftime('%H:%M')
@@ -54,7 +57,7 @@ def check_in_data():
     month = datetime.now().month
     with open(f'{root}/active/onbreak.csv', 'a', encoding='UTF-8') as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerow([name, place, start_time, current_time])
+        writer.writerow([name, place, start_time, current_time, unique_id])
 
     for attempt in range(5):
         try:
@@ -68,7 +71,7 @@ def check_in_data():
 
 @app.route('/done_out', methods=['POST'])
 def check_out_data():
-    name = request.form['name']
+    unique_id = request.form['id']
     todays_date = date.today()
     end_time = datetime.now().strftime('%H:%M')
     month = datetime.now().month
@@ -79,7 +82,8 @@ def check_out_data():
             writer = csv.writer(temp_file)
             for row in csv.reader(csv_file):
                 if row:
-                    if row[0] == name:
+                    if row[4] == unique_id:
+                        name = row[0]
                         place = row[1]
                         tid_inn = row[2]
                         total_time = int(float(row[3]))
@@ -147,6 +151,10 @@ def new_day():
     with open(f'{root}/data/{month}/total/{date.today()}.csv', 'w', encoding='UTF-8') as file:
         writer = csv.writer(file)
         writer.writerow(['Navn','Sted','Tid inn', 'Tid ut','Tid på pause'])
-        
+
+    with open(f'{root}/active/onbreak.csv', 'w', encoding='UTF-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Navn','Sted','Tid inn','time','id'])
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
