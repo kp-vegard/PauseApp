@@ -1,0 +1,16 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<div>
+    <h2 id="red">Du hadde pause i {{pause_length}} minutter</h2>
+    <p id="smaller">Skriv inn begrunnelse for at du hadde så lang pause under</p>      
+    <form action="reason" method='POST'>
+        <textarea id='reason' type='text' name='reason' placeholder='Begrunnelse' required='' rows=3 cols=30 pattern="[a-åA-Å ]*" title="Skriv en grunn"></textarea><br>
+        <input type='submit' id='inn' value='Send inn'>
+    </form>
+</div>
+<script>
+    setTimeout(function(){
+        window.location.href = 'valg';
+    }, 120000);
+</script>

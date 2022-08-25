@@ -7,6 +7,8 @@ import csv
 import sys
 from random import randint
 
+maks_tid = 35
+
 root = sys.path[0]
 app = Flask(__name__)
 
@@ -42,6 +44,15 @@ def admin():
                             tables2=[data2.to_html(classes='data2')],
                             titles2=data2.columns.values
                             )
+
+@app.route('/reason', methods=['POST'])
+def reason():
+    reason = request.form['reason']
+    d = date.today()
+    with open(f'{root}/data/reasons/{d}.txt', 'a') as file:
+        file.write(f'{the_last_name} ({the_last_place}):\n{reason}\n\n')
+
+    return redirect('valg')
 
 @app.route('/done', methods=['POST'])
 def check_in_data():
@@ -117,7 +128,15 @@ def check_out_data():
             try: new_month()
             except: new_day()
         else: break
-    return render_template('done_out.html', pause_length=total_time)
+
+    if total_time < maks_tid:
+        return render_template('done_out.html', pause_length=total_time)
+    else:
+        global the_last_name
+        global the_last_place
+        the_last_name = name
+        the_last_place = place
+        return render_template('over_limit.html', pause_length=total_time)
 
 def load_database():
     df = pd.read_csv(f'{root}/active/onbreak.csv', encoding='UTF-8')

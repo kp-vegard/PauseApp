@@ -4,6 +4,16 @@ h2 {
     font-size: 75px;
 }
 
+h3 {
+    font-family: 'Lato';
+    font-size: 50px;
+}
+
+p {
+    font-family: 'Lato';
+    font-size: 50px;
+}
+
 input {
     padding: 10px;
     text-align: center;
@@ -126,4 +136,20 @@ select {
     box-sizing: border-box;
     border: 2px solid;
     border-color: black;
+}
+
+#reason {
+    box-sizing: border-box;
+    border: 2px solid;
+    border-color: black;
+    height: 300px;
+    width: 600px;
+}
+
+#smaller {
+    font-size: 30px;
+}
+
+#red {
+    color: red;
 }
