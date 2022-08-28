@@ -49,7 +49,7 @@ def admin():
 def reason():
     reason = request.form['reason']
     d = date.today()
-    with open(f'{root}/data/reasons/{d}.txt', 'a') as file:
+    with open(f'{root}/data/reasons/{d}.txt', 'a', encoding='UTF-8') as file:
         file.write(f'{the_last_name} ({the_last_place}):\n{reason}\n\n')
 
     return redirect('valg')
