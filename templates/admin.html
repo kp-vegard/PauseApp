@@ -36,33 +36,5 @@
     </table>
 </div>
 </body>
-<script>
-    if (window.addEventListener) {
-        window.addEventListener('load', WindowLoad, false);
-    } else if (window.attachEvent) {
-        window.attachEvent('onload', WindowLoad)
-    }
-
-    function WindowLoad(event) {
-        if (window.location.href.indexOf('page_y') != -1) {
-            var page_y = window.location.href.split('=')[1];
-            setTimeout(function(){
-                window.scrollTo(0, page_y)
-            }, 2)
-        }
-        timer()
-    }
-
-    var timer = function Wait() {
-        setTimeout(function(){
-            var page_y = document.body.scrollTop;
-            if (window.location.href.indexOf('page_y') == -1) {
-                window.location.href = window.location.href + '?page_y=' + page_y;
-            }else {
-                var s = window.location.href.split('?')[0];
-                window.location.href = s + '?page_y=' + page_y
-            }
-        }, 10000)
-    }
-</script>
+<script src="{{url_for('static', filename='admin.js')}}"></script>
 </html>
